@@ -2,11 +2,12 @@ console.log("Script loaded");
 console.log("Das ist der zweite Aufruf");
 const userlist = document.getElementById('user-list');
 const imageList = document.getElementById('image-list');
-
+const albumList = document.getElementById('album-list');
 
 // Define an array for users
 let users = []; 
 let images = []; // to be filled with images from api endpoint https://jsonplaceholder.typicode.com/photos
+let albums = []; // wird mit den Alben gefüllt von api endpoint https://jsonplaceholder.typicode.com/albums
 
 // define async function to fetch users data
 async function fetchUserData(){
@@ -39,8 +40,22 @@ async function fetchImageData() {
     
 }
 
+// async function devinieren für fetch album data
+async function fetchAlbumData() {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/albums');
+        const albumsData = await response.json();
+        albums = albumsData;
+        console.log('Albums loaded:', albums);
+        renderAlbums();
+    } catch (error) {
+        console.log("Error fetching albums:", error);
+    }
+}
+
 fetchUserData();
 fetchImageData();
+fetchAlbumData(); // Funktion aufruf
 
 function renderUsers(){
     users.forEach((user) => {
@@ -59,6 +74,16 @@ function renderImages(){
         imageItem.setAttribute('src', image.url)
         imageList.appendChild(imageItem)
 
+    });
+}
+
+// Render Albums
+function renderAlbums() {
+    albumList.innerHTML = '';
+    albums.forEach(album => {
+        const li = document.createElement('li');
+        li.textContent = album.title;
+        albumList.appendChild(li);
     });
 }
 
